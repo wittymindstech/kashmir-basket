@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kashmir Basket – Dry Fruits & Spices</title>
+  <meta name="description" content="Kashmiri dry fruits & spices: almonds, walnuts, anjeer, saffron, tikka masala. Simple cart + UPI payment." />
+  <style>
+    :root{
+      --bg:#0b0c10; --panel:#111317; --soft:#1a1f27; --text:#e9edf1; --muted:#aab4c0; --brand:#ffb703; --accent:#fb5607;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans','Apple Color Emoji','Segoe UI Emoji',sans-serif;background:linear-gradient(180deg,#0b0c10,#0d1117);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin-inline:auto;padding:20px}
+    header{position:sticky;top:0;background:rgba(13,17,23,.7);backdrop-filter:blur(10px);border-bottom:1px solid #20242c;z-index:50}
+    .nav{display:flex;align-items:center;gap:14px;justify-content:space-between;padding:14px 20px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo .mark{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 180deg, var(--brand), var(--accent));box-shadow:0 8px 24px rgba(255,183,3,.25)}
+    .logo h1{font-size:18px;font-weight:700;letter-spacing:.3px;margin:0}
+    .pill{padding:8px 12px;border:1px solid #232935;background:var(--soft);border-radius:999px;color:var(--muted);font-size:12px}
+    .cart-btn{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid #2a3140;background:#12161d;border-radius:12px;cursor:pointer}
+    .cart-btn strong{font-size:14px}
+
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;margin:24px 0}
+    .hero .card{background:radial-gradient(1200px 400px at -5% -30%, rgba(251,86,7,.12), transparent 40%),
+                               radial-gradient(900px 300px at 110% 30%, rgba(255,183,3,.12), transparent 40%), var(--panel);
+                border:1px solid #212733;border-radius:18px;padding:26px}
+    .hero h2{margin:0 0 10px;font-size:28px}
+    .hero p{margin:0;color:var(--muted)}
+    .hero-cta{display:flex;gap:12px;margin-top:16px}
+    .btn{border:1px solid #2a3140;background:#12161d;color:#fff;padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer}
+    .btn.brand{background:linear-gradient(180deg, #ffb703, #f48c06);border:0;color:#0a0a0a}
+    .btn.ghost{background:transparent}
+
+    .grid{display:grid;grid-template-columns:repeat( auto-fit, minmax(240px,1fr));gap:18px}
+    .product{background:linear-gradient(180deg,#0f1319,#0e1218);border:1px solid #222834;border-radius:16px;overflow:hidden}
+    .product .img{aspect-ratio:4/3;background:#0c1117 url('https://images.unsplash.com/photo-1592201426557-66bba44f09b7?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat}
+    .product:nth-child(2) .img{background-image:url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1200&auto=format&fit=crop')}
+    .product:nth-child(3) .img{background-image:url('https://images.unsplash.com/photo-1604909052743-94e838986d98?q=80&w=1200&auto=format&fit=crop')}
+    .product:nth-child(4) .img{background-image:url('https://images.unsplash.com/photo-1604335399105-a0c9b6a0f2f4?q=80&w=1200&auto=format&fit=crop')}
+    .product:nth-child(5) .img{background-image:url('https://images.unsplash.com/photo-1601050690597-9e5d9ef67b3c?q=80&w=1200&auto=format&fit=crop')}
+    .product .body{padding:14px}
+    .product h3{margin:0 0 6px;font-size:18px}
+    .product p{margin:0;color:var(--muted);font-size:13px}
+    .product .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+    .price{font-weight:800}
+    .qty{display:flex;align-items:center;gap:8px}
+    .qty input{width:54px;padding:6px 8px;border-radius:10px;border:1px solid #2a3140;background:#0b0f14;color:#fff}
+
+    footer{margin:34px 0;color:var(--muted);font-size:12px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+
+    /* Drawer (Cart/Payment) */
+    .drawer{position:fixed;inset:0;display:none;z-index:100}
+    .drawer.open{display:block}
+    .drawer .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+    .panel{position:absolute;top:0;right:0;height:100%;width:min(420px,100%);background:#0d1117;border-left:1px solid #20242c;display:flex;flex-direction:column}
+    .panel header{position:relative;background:#0d1117}
+    .panel header h3{margin:0;font-size:16px;letter-spacing:.2px}
+    .panel .content{padding:16px;overflow:auto;flex:1}
+    .panel .foot{border-top:1px solid #212733;padding:16px;display:grid;gap:10px}
+    .x{position:absolute;right:10px;top:12px;border:0;background:transparent;color:#fff;font-size:22px;cursor:pointer}
+
+    .line{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #232935;background:#0c1117;border-radius:12px;margin-bottom:10px}
+    .muted{color:var(--muted)}
+    .total{display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:18px}
+
+    .field{display:grid;gap:6px;margin-top:10px}
+    .field input, .field textarea{background:#0b0f14;border:1px solid #2a3140;color:#fff;border-radius:10px;padding:10px}
+    .note{font-size:12px;color:var(--muted)}
+
+    .qr{display:grid;place-items:center;border:1px dashed #2b3140;border-radius:12px;padding:12px;margin-top:10px}
+    .qr img{width:180px;height:180px}
+
+    @media (max-width: 860px){
+      .hero{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav wrap">
+      <div class="logo">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <h1>Kashmir Basket</h1>
+          <div class="pill" aria-label="Tagline">Authentic Dry Fruits & Spices</div>
+        </div>
+      </div>
+      <button class="cart-btn" id="openCart" aria-label="Open cart">
+        🛒 <strong id="cartCount">0</strong>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="card">
+        <h2>Pure Kashmiri Goodness, Delivered</h2>
+        <p>Handpicked almonds, walnuts, anjeer, and real saffron from the valleys of Kashmir. Simple cart, fast UPI checkout.</p>
+        <div class="hero-cta">
+          <a href="#products" class="btn brand">Shop Now</a>
+          <button class="btn ghost" id="openCart2">View Cart</button>
+        </div>
+      </div>
+      <div class="card" role="note">
+        <strong>Fast UPI Payments</strong>
+        <p class="note">We support UPI apps (PhonePe, Google Pay, Paytm, BHIM). On desktop, scan the QR we generate for you.</p>
+      </div>
+    </section>
+
+    <h2 id="products" style="font-size:22px;margin:10px 0 14px">Featured Products</h2>
+    <section class="grid" aria-label="Product list">
+      <!-- Products rendered by JS -->
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> Kashmir Basket • Authentic goods from Kashmir ✨</div>
+      <div class="muted">UPI ID: <code>wittymindstech@icici</code></div>
+    </footer>
+  </main>
+
+  <!-- Drawer: Cart & Payment -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="backdrop" id="closeDrawer"></div>
+    <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <header class="nav">
+        <h3 id="drawerTitle">Your Cart</h3>
+        <button class="x" id="closeDrawer2" aria-label="Close">×</button>
+      </header>
+      <div class="content">
+        <div id="cartEmpty" class="muted">Your cart is empty. Add some goodies! 🙂</div>
+        <div id="cartLines"></div>
+        <div id="checkoutForm" style="display:none">
+          <h4 style="margin:10px 0 6px">Billing Details</h4>
+          <div class="field"><label for="fullName">Full Name</label><input id="fullName" placeholder="e.g. Gaurav K" /></div>
+          <div class="field"><label for="phone">Phone</label><input id="phone" placeholder="10-digit mobile" maxlength="10" /></div>
+          <div class="field"><label for="note">Order note (optional)</label><textarea id="note" rows="2" placeholder="No. of packs, special instructions…"></textarea></div>
+          <p class="note">We’ll include your name and order ID in the UPI payment note so we can match it instantly.</p>
+          <div class="qr" id="qrWrap" style="display:none">
+            <div class="note" style="margin-bottom:6px">Can’t open a UPI app? Scan this QR in any UPI app.</div>
+            <img id="qr" alt="UPI QR code" />
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="total"><span>Total</span><span>₹ <span id="grandTotal">0</span></span></div>
+        <button class="btn brand" id="checkoutBtn">Book & Pay with UPI</button>
+        <button class="btn" id="clearBtn">Clear Cart</button>
+        <div class="note">By paying, you agree to our simple policy: fresh products, honest weights, quick support.</div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const UPI_ID = 'wittymindstech@icici';
+    const MERCHANT_NAME = 'Kashmir Basket';
+
+    const products = [
+      {id:'almonds', name:'Kashmiri Almonds (Badam)', price:699, unit:'500g', desc:'Sweet, oil-rich almonds from Kashmir.', img:1},
+      {id:'walnuts', name:'Kashmiri Walnuts (Akhrot)', price:649, unit:'500g', desc:'Light-shelled, buttery kernels.', img:2},
+      {id:'anjeer', name:'Anjeer (Premium Figs)', price:599, unit:'500g', desc:'Sun-dried, soft & naturally sweet.', img:3},
+      {id:'saffron', name:'Pure Saffron (Kesar)', price:399, unit:'1g', desc:'High-quality threads, deep aroma.', img:4},
+      {id:'tikka', name:'Kashmiri Tikka Masala', price:249, unit:'100g', desc:'Fragrant spice blend for grills & curries.', img:5},
+    ];
+
+    const grid = document.querySelector('.grid');
+    const cartLines = document.getElementById('cartLines');
+    const cartCount = document.getElementById('cartCount');
+    const grandTotal = document.getElementById('grandTotal');
+    const drawer = document.getElementById('drawer');
+    const cartEmpty = document.getElementById('cartEmpty');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const qrWrap = document.getElementById('qrWrap');
+    const qrImg = document.getElementById('qr');
+
+    let cart = JSON.parse(localStorage.getItem('kb_cart')||'[]');
+
+    function save(){ localStorage.setItem('kb_cart', JSON.stringify(cart)); }
+
+    function money(n){ return n.toLocaleString('en-IN'); }
+
+    function renderProducts(){
+      grid.innerHTML = products.map(p => `
+        <article class="product" data-id="${p.id}">
+          <div class="img" role="img" aria-label="${p.name}"></div>
+          <div class="body">
+            <h3>${p.name}</h3>
+            <p>${p.desc}</p>
+            <div class="row">
+              <div><span class="price">₹ ${money(p.price)}</span> <span class="muted">/ ${p.unit}</span></div>
+              <div class="qty">
+                <label class="muted" for="q-${p.id}" style="display:none">Quantity</label>
+                <input id="q-${p.id}" type="number" min="1" value="1" />
+                <button class="btn add">Add</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      grid.querySelectorAll('.add').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const card = e.target.closest('.product');
+          const id = card.dataset.id;
+          const q = parseInt(card.querySelector('input').value||'1',10);
+          addToCart(id, q);
+        });
+      });
+    }
+
+    function addToCart(id, qty){
+      const p = products.find(x=>x.id===id);
+      if(!p) return;
+      const line = cart.find(x=>x.id===id);
+      if(line){ line.qty += qty; }
+      else cart.push({id, name:p.name, price:p.price, qty});
+      save();
+      drawCart();
+      openDrawer();
+    }
+
+    function removeLine(id){
+      cart = cart.filter(l=>l.id!==id);
+      save(); drawCart();
+    }
+
+    function updateQty(id, qty){
+      const line = cart.find(l=>l.id===id);
+      if(!line) return;
+      line.qty = Math.max(1, qty||1);
+      save(); drawCart();
+    }
+
+    function drawCart(){
+      const count = cart.reduce((a,b)=>a+b.qty,0);
+      cartCount.textContent = count;
+      const total = cart.reduce((a,b)=>a + b.price*b.qty, 0);
+      grandTotal.textContent = money(total);
+
+      cartEmpty.style.display = cart.length? 'none':'block';
+      checkoutForm.style.display = cart.length? 'block':'none';
+      checkoutBtn.disabled = cart.length===0;
+
+      cartLines.innerHTML = cart.map(l=>`
+        <div class="line" data-id="${l.id}">
+          <div>
+            <strong>${l.name}</strong>
+            <div class="muted">₹ ${money(l.price)} ×</div>
+          </div>
+          <div class="qty">
+            <input aria-label="Quantity for ${l.name}" type="number" min="1" value="${l.qty}" />
+            <button class="btn" data-act="rm">✕</button>
+          </div>
+        </div>
+      `).join('');
+
+      cartLines.querySelectorAll('.line').forEach(lineEl=>{
+        const id = lineEl.dataset.id;
+        lineEl.querySelector('input').addEventListener('change', e=>updateQty(id, parseInt(e.target.value||'1',10)));
+        lineEl.querySelector('[data-act="rm"]').addEventListener('click', ()=>removeLine(id));
+      });
+    }
+
+    function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
+    function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+
+    function buildUpiUrl(amount, note){
+      const params = new URLSearchParams({
+        pa: UPI_ID,          // payee address
+        pn: MERCHANT_NAME,   // payee name
+        am: amount.toFixed(2),
+        cu: 'INR',
+        tn: note
+      });
+      return `upi://pay?${params.toString()}`;
+    }
+
+    function showQr(upiUrl){
+      const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiUrl);
+      qrImg.src = qrApi;
+      qrWrap.style.display = 'grid';
+    }
+
+    function checkout(){
+      if(cart.length===0) return;
+      const total = cart.reduce((a,b)=>a + b.price*b.qty, 0);
+      const name = (document.getElementById('fullName').value||'Guest').trim();
+      const phone = (document.getElementById('phone').value||'').trim();
+      const extra = (document.getElementById('note').value||'').trim();
+      const orderId = 'KB' + Math.random().toString(36).slice(2,8).toUpperCase();
+
+      const items = cart.map(l=>`${l.name}x${l.qty}`).join(', ');
+      const tn = `${orderId} • ${name} • ${items}${extra? ' • '+extra: ''}`.slice(0,80);
+
+      const upiUrl = buildUpiUrl(total, tn);
+
+      // Try to open UPI app (mobile). Fallback: QR for desktop.
+      window.location.href = upiUrl;
+      showQr(upiUrl);
+    }
+
+    // Wire UI
+    document.getElementById('openCart').addEventListener('click', openDrawer);
+    document.getElementById('openCart2').addEventListener('click', openDrawer);
+    document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+    document.getElementById('closeDrawer2').addEventListener('click', closeDrawer);
+    checkoutBtn.addEventListener('click', checkout);
+    clearBtn.addEventListener('click', ()=>{ cart=[]; save(); drawCart(); });
+
+    // Boot
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderProducts();
+    drawCart();
+  </script>
+</body>
+</html>
