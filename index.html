@@ -156,13 +156,13 @@
     const UPI_ID = 'wittymindstech@icici';
     const MERCHANT_NAME = 'Kashmir Basket';
 
-    const products = [
-      {id:'almonds', name:'Kashmiri Almonds (Badam)', price:699, unit:'500g', desc:'Sweet, oil-rich almonds from Kashmir.', img:'almonds.jpg'},
-      {id:'walnuts', name:'Kashmiri Walnuts (Akhrot)', price:649, unit:'500g', desc:'Light-shelled, buttery kernels.', img:2},
-      {id:'anjeer', name:'Anjeer (Premium Figs)', price:599, unit:'500g', desc:'Sun-dried, soft & naturally sweet.', img:3},
-      {id:'saffron', name:'Pure Saffron (Kesar)', price:399, unit:'1g', desc:'High-quality threads, deep aroma.', img:4},
-      {id:'tikka', name:'Kashmiri Tikka Masala', price:249, unit:'100g', desc:'Fragrant spice blend for grills & curries.', img:5},
-    ];
+ const products = [
+  {id:'almonds', name:'Kashmiri Almonds (Badam)', price:699, unit:'500g', desc:'Sweet, oil-rich almonds from Kashmir.', img:'assets/images/almonds.jpg'},
+  {id:'walnuts', name:'Kashmiri Walnuts (Akhrot)', price:649, unit:'500g', desc:'Light-shelled, buttery kernels.', img:'assets/images/walnuts.jpg'},
+  {id:'anjeer', name:'Anjeer (Premium Figs)', price:599, unit:'500g', desc:'Sun-dried, soft & naturally sweet.', img:'assets/images/anjeer.jpg'},
+  {id:'saffron', name:'Pure Saffron (Kesar)', price:399, unit:'1g', desc:'High-quality threads, deep aroma.', img:'assets/images/saffron.jpg'},
+  {id:'tikka', name:'Kashmiri Tikka Masala', price:249, unit:'100g', desc:'Fragrant spice blend for grills & curries.', img:'assets/images/tikka.jpg'},
+];
 
     const grid = document.querySelector('.grid');
     const cartLines = document.getElementById('cartLines');
@@ -185,7 +185,7 @@
     function renderProducts(){
       grid.innerHTML = products.map(p => `
         <article class="product" data-id="${p.id}">
-          <div class="img" role="img" aria-label="${p.name}"></div>
+          <div class="img" role="img" aria-label="${p.name}" style="background-image:url('${p.img}')"></div>
           <div class="body">
             <h3>${p.name}</h3>
             <p>${p.desc}</p>
