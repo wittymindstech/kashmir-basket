@@ -35,11 +35,7 @@
 
     .grid{display:grid;grid-template-columns:repeat( auto-fit, minmax(240px,1fr));gap:18px}
     .product{background:linear-gradient(180deg,#0f1319,#0e1218);border:1px solid #222834;border-radius:16px;overflow:hidden}
-    .product .img{aspect-ratio:4/3;background:#0c1117 url('https://images.unsplash.com/photo-1592201426557-66bba44f09b7?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat}
-    .product:nth-child(2) .img{background-image:url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1200&auto=format&fit=crop')}
-    .product:nth-child(3) .img{background-image:url('https://images.unsplash.com/photo-1604909052743-94e838986d98?q=80&w=1200&auto=format&fit=crop')}
-    .product:nth-child(4) .img{background-image:url('https://images.unsplash.com/photo-1604335399105-a0c9b6a0f2f4?q=80&w=1200&auto=format&fit=crop')}
-    .product:nth-child(5) .img{background-image:url('https://images.unsplash.com/photo-1601050690597-9e5d9ef67b3c?q=80&w=1200&auto=format&fit=crop')}
+    .product .img{aspect-ratio:4/3;background:#0c1117 center/cover no-repeat}
     .product .body{padding:14px}
     .product h3{margin:0 0 6px;font-size:18px}
     .product p{margin:0;color:var(--muted);font-size:13px}
@@ -158,10 +154,10 @@
 
     const products = [
       {id:'almonds', name:'Kashmiri Almonds (Badam)', price:699, unit:'500g', desc:'Sweet, oil-rich almonds from Kashmir.', img:'almonds.jpg'},
-      {id:'walnuts', name:'Kashmiri Walnuts (Akhrot)', price:649, unit:'500g', desc:'Light-shelled, buttery kernels.', img:2},
-      {id:'anjeer', name:'Anjeer (Premium Figs)', price:599, unit:'500g', desc:'Sun-dried, soft & naturally sweet.', img:3},
-      {id:'saffron', name:'Pure Saffron (Kesar)', price:399, unit:'1g', desc:'High-quality threads, deep aroma.', img:4},
-      {id:'tikka', name:'Kashmiri Tikka Masala', price:249, unit:'100g', desc:'Fragrant spice blend for grills & curries.', img:5},
+      {id:'walnuts', name:'Kashmiri Walnuts (Akhrot)', price:649, unit:'500g', desc:'Light-shelled, buttery kernels.', img:'walnuts.jpg'},
+      {id:'anjeer', name:'Anjeer (Premium Figs)', price:599, unit:'500g', desc:'Sun-dried, soft & naturally sweet.', img:'anjeer.jpg'},
+      {id:'saffron', name:'Pure Saffron (Kesar)', price:399, unit:'1g', desc:'High-quality threads, deep aroma.', img:'saffron.jpg'},
+      {id:'tikka', name:'Kashmiri Tikka Masala', price:249, unit:'100g', desc:'Fragrant spice blend for grills & curries.', img:'tikka.jpg'},
     ];
 
     const grid = document.querySelector('.grid');
@@ -185,7 +181,7 @@
     function renderProducts(){
       grid.innerHTML = products.map(p => `
         <article class="product" data-id="${p.id}">
-          <div class="img" role="img" aria-label="${p.name}"></div>
+          <div class="img" role="img" aria-label="${p.name}" style="background-image:url('${p.img}')"></div>
           <div class="body">
             <h3>${p.name}</h3>
             <p>${p.desc}</p>
@@ -264,56 +260,4 @@
       });
     }
 
-    function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
-    function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
-
-    function buildUpiUrl(amount, note){
-      const params = new URLSearchParams({
-        pa: UPI_ID,          // payee address
-        pn: MERCHANT_NAME,   // payee name
-        am: amount.toFixed(2),
-        cu: 'INR',
-        tn: note
-      });
-      return `upi://pay?${params.toString()}`;
-    }
-
-    function showQr(upiUrl){
-      const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiUrl);
-      qrImg.src = qrApi;
-      qrWrap.style.display = 'grid';
-    }
-
-    function checkout(){
-      if(cart.length===0) return;
-      const total = cart.reduce((a,b)=>a + b.price*b.qty, 0);
-      const name = (document.getElementById('fullName').value||'Guest').trim();
-      const phone = (document.getElementById('phone').value||'').trim();
-      const extra = (document.getElementById('note').value||'').trim();
-      const orderId = 'KB' + Math.random().toString(36).slice(2,8).toUpperCase();
-
-      const items = cart.map(l=>`${l.name}x${l.qty}`).join(', ');
-      const tn = `${orderId} • ${name} • ${items}${extra? ' • '+extra: ''}`.slice(0,80);
-
-      const upiUrl = buildUpiUrl(total, tn);
-
-      // Try to open UPI app (mobile). Fallback: QR for desktop.
-      window.location.href = upiUrl;
-      showQr(upiUrl);
-    }
-
-    // Wire UI
-    document.getElementById('openCart').addEventListener('click', openDrawer);
-    document.getElementById('openCart2').addEventListener('click', openDrawer);
-    document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
-    document.getElementById('closeDrawer2').addEventListener('click', closeDrawer);
-    checkoutBtn.addEventListener('click', checkout);
-    clearBtn.addEventListener('click', ()=>{ cart=[]; save(); drawCart(); });
-
-    // Boot
-    document.getElementById('year').textContent = new Date().getFullYear();
-    renderProducts();
-    drawCart();
-  </script>
-</body>
-</html>
+    function openDrawer(){ drawer.classList.add('open'); drawer
