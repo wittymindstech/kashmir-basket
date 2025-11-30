@@ -156,8 +156,15 @@
         <div id="cartLines"></div>
         <div id="checkoutForm" style="display:none">
           <h4 style="margin:10px 0 6px">Billing Details</h4>
+          <div class="field"><label for="phone">Your WhatsApp Number</label><input id="phone" ... />
           <div class="field"><label for="fullName">Full Name</label><input id="fullName" placeholder="e.g. Gaurav K" /></div>
           <div class="field"><label for="phone">Phone</label><input id="phone" placeholder="10-digit mobile" maxlength="10" /></div>
+          <div class="field"><label for="whatsappNumber">WhatsApp Number</label><input id="whatsappNumber" placeholder="Enter WhatsApp Number" /> </div>
+
+<div class="field"><label for="discountCode">Discount Code</label>
+<input id="discountCode" placeholder="Use SHEEN for discount" />
+</div>
+
           <div class="field"><label for="note">Order note (optional)</label><textarea id="note" rows="2" placeholder="No. of packs, special instructions…"></textarea></div>
           <p class="note">We’ll include your name and order ID in the UPI payment note so we can match it instantly.</p>
           <div class="qr" id="qrWrap" style="display:none">
@@ -169,6 +176,7 @@
       <div class="foot">
         <div class="total"><span>Total</span><span>₹ <span id="grandTotal">0</span></span></div>
         <button class="btn brand" id="checkoutBtn">Book & Pay with UPI</button>
+        <button class="btn" id="whatsappOrderBtn" style="background:#25D366;color:white;"> Order via WhatsApp (Safe) </button>
         <button class="btn" id="clearBtn">Clear Cart</button>
         <div class="note">By paying, you agree to our simple policy: fresh products, honest weights, quick support.</div>
       </div>
@@ -326,6 +334,40 @@
       window.location.href = upiUrl;
       showQr(upiUrl);
     }
+
+    document.getElementById("whatsappOrderBtn").addEventListener("click", function () {
+
+    const phone = document.getElementById("whatsappNumber").value;
+    const discount = document.getElementById("discountCode").value || "None";
+
+    if (!phone) {
+        alert("Please enter WhatsApp number");
+        return;
+    }
+
+    const items = Array.from(document.querySelectorAll("#cartLines .line"))
+        .map(line => line.innerText.replace("\n", " "))
+        .join("\n");
+
+    const totalAmount = document.getElementById("grandTotal").innerText;
+
+    const message =
+`🛒 *Kashmir Basket – New Order*
+
+*Items:*
+${items}
+
+💰 *Total:* ₹${totalAmount}
+📱 *Customer WhatsApp:* ${phone}
+🏷️ *Discount Code:* ${discount}
+
+Please confirm availability.`;
+
+    const encoded = encodeURIComponent(message);
+
+    const adminNumber = "919113957428"; // ← Change to your WhatsApp number
+    window.open(`https://wa.me/${adminNumber}?text=${encoded}`, "_blank");
+});
 
     // Wire UI
     document.getElementById('openCart').addEventListener('click', openDrawer);
