@@ -182,7 +182,23 @@
       </div>
     </aside>
   </div>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  function payWithRazorpay(amount) {
 
+  var options = {
+    "key": "rzp_live_SfLfpm0dDH089y", // 👈 paste your Key ID here
+    "amount": amount * 100,
+    "currency": "INR",
+    "name": "Kashmir Basket",
+
+    "handler": function (response) {
+        alert("Payment Successful: " + response.razorpay_payment_id);
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
   <script>
     const UPI_ID = 'wittymindstech@icici';
     const MERCHANT_NAME = 'Kashmir Basket';
@@ -211,7 +227,7 @@
     const qrImg = document.getElementById('qr');
 
     let cart = JSON.parse(localStorage.getItem('kb_cart')||'[]');
-
+    
     function save(){ localStorage.setItem('kb_cart', JSON.stringify(cart)); }
 
     function money(n){ return n.toLocaleString('en-IN'); }
@@ -318,6 +334,22 @@
       qrWrap.style.display = 'grid';
     }
 
+    function payWithRazorpay(amount) {
+
+      var options = {
+       "key": "rzp_test_xxxxx", // 👈 paste your Key ID here
+       "amount": amount * 100,
+       "currency": "INR",
+      "name": "Kashmir Basket",
+
+      "handler": function (response) {
+        alert("Payment Successful: " + response.razorpay_payment_id);
+     }
+   };
+
+     var rzp = new Razorpay(options);
+     rzp.open();
+  }
     function checkout(){
       if(cart.length===0) return;
       const total = cart.reduce((a,b)=>a + b.price*b.qty, 0);
@@ -371,11 +403,16 @@ Please confirm availability.`;
 });
 
     // Wire UI
+    
     document.getElementById('openCart').addEventListener('click', openDrawer);
     document.getElementById('openCart2').addEventListener('click', openDrawer);
     document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
     document.getElementById('closeDrawer2').addEventListener('click', closeDrawer);
-    checkoutBtn.addEventListener('click', checkout);
+   // checkoutBtn.addEventListener('click', checkout);
+    checkoutBtn.addEventListener('click', () => {
+    const total = cart.reduce((a,b)=>a + b.price*b.qty, 0);
+    payWithRazorpay(total);
+});
     clearBtn.addEventListener('click', ()=>{ cart=[]; save(); drawCart(); });
 
     // Boot
